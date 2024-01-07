@@ -5,7 +5,7 @@
   "main": "./out/main/index.js",
   "author": "https://github.com/ptrzs3",
   "homepage": "https://github.com/ptrzs3",
-  "nodemonConfig" : {
+  "nodemonConfig": {
     "events": {
       "exit": ""
     },
@@ -45,6 +45,7 @@
     "eslint": "^8.47.0",
     "eslint-plugin-vue": "^9.17.0",
     "less": "^4.2.0",
+    "nodemon": "^3.0.2",
     "prettier": "^3.0.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
