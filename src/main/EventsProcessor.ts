@@ -2,9 +2,12 @@ import icon from '../../resources/icon.png?asset'
 import { join } from 'path'
 import { shell, BrowserWindow, protocol, net } from 'electron'
 import { is } from '@electron-toolkit/utils'
-import path from 'path'
-import fs from 'fs'
+
 class EventsProcessor {
+  constructor() {
+    this.registerFileProtocol()
+  }
+
   createWindow(): void {
     const mainWindow = new BrowserWindow({
       width: 900,
@@ -35,18 +38,14 @@ class EventsProcessor {
     mainWindow.webContents.openDevTools()
   }
 
-  // async registerFileProtocol() {
-  //   protocol.handle('sizhu', async (request: Request) => {
-  //     const url = request.url.replace('sizhu://', '').replace(/\/$/, '')
-  //     const filePath = path.normalize(decodeURIComponent(url))
-  //     const data = await fs.promises.readFile(filePath)
-  //     return new Response(data, {
-  //       status: 200,
-  //       statusText: 'OK',
-  //       headers: { 'Content-Type': 'audio/mpeg' }
-  //     })
-  //   })
-  // }
+  private async _handler(request: Request): Promise<Response> {
+    const url = request.url.replace('sizhu://', '')
+    return await net.fetch('file:///' + url)
+  }
+
+  private registerFileProtocol() {
+    protocol.handle('sizhu', this._handler)
+  }
 }
 
 export { EventsProcessor }
