@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: sizhu
+productName: plebeia
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: sizhu
+  executableName: plebeia
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

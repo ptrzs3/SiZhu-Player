@@ -3,9 +3,18 @@ import { extname, join } from 'path'
 import { promises as fsPromises } from 'fs'
 
 class MediaScanner {
+  private librarys: Array<string> = []
+  private recursive = true
+  private songsSet = new Set<string>()
+
   /**
-   *
+   * maintain a list of all songs' absolute path and make sure that no duplicate
+   */
+  public songsList = new Array<string>()
+
+  /**
    * @param paths music librarys
+   * @param recursive recursively scan or not, default to true
    */
   constructor(paths: Array<string> = [], recursive = true) {
     this.recursive = recursive
@@ -13,18 +22,7 @@ class MediaScanner {
     console.log(this.librarys)
   }
 
-  /**
-   * music librarys or default to USER.MUSIC
-   */
-  private librarys: Array<string> = []
-  songs = new Set<string>()
-
   private allowedFormats: Array<string> = ['.mp3', '.flac', '.ogg', '.wav', '.wma']
-
-  /**
-   * recursively scan or not, default to true
-   */
-  recursive = true
 
   _processLibrarys(paths: Array<string>) {
     // User passed the paths
@@ -66,16 +64,14 @@ class MediaScanner {
   }
 
   async scanDirectories() {
-    this.songs.clear()
-    // console.time('start')
+    this.songsSet.clear()
     const songLists: string[][] = await Promise.all(
       this.librarys.map((path) => {
         return this.scanDirectory(path)
       })
     )
-    songLists.map((list) => list.map((song) => this.songs.add(song)))
-    // console.timeEnd('start')
-    // this.songs.forEach((song) => console.log(song))
+    songLists.map((list) => list.map((song) => this.songsSet.add(song)))
+    this.songsList = Array.from(this.songsSet)
   }
 }
 
