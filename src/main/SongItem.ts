@@ -1,5 +1,4 @@
 import { IPicture, parseFile } from 'music-metadata'
-import * as NodeID3 from 'node-id3'
 import { basename } from 'path'
 import * as crypto from 'crypto'
 class SongItem {
@@ -14,7 +13,7 @@ class SongItem {
   album!: string
   duration!: number
   playing: boolean
-  lyrics!: string
+  lyrics!: string[]
   cover!: IPicture[]
   constructor(fp: string) {
     this.filePath = fp
@@ -28,8 +27,7 @@ class SongItem {
     this.album = mm.common.album || ''
     this.duration = mm.format.duration || -1
     this.cover = mm.common.picture || []
-    this.lyrics =
-      NodeID3.read(this.filePath, { include: ['USLT'] }).unsynchronisedLyrics?.text || ''
+    this.lyrics = mm.common.lyrics || []
     this.id = crypto
       .createHash('md5')
       .update(this.title + mm.format.bitrate + this.duration + this.album)

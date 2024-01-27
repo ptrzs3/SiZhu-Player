@@ -38,7 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongItem = void 0;
 var music_metadata_1 = require("music-metadata");
-var NodeID3 = require("node-id3");
 var path_1 = require("path");
 var crypto = require("crypto");
 var SongItem = /** @class */ (function () {
@@ -48,21 +47,19 @@ var SongItem = /** @class */ (function () {
         this.playing = false;
     }
     SongItem.prototype.getMetadata = function () {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var mm;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, (0, music_metadata_1.parseFile)(this.filePath, { duration: true })];
                     case 1:
-                        mm = _b.sent();
+                        mm = _a.sent();
                         this.title = mm.common.title || this.fileName;
                         this.artists = mm.common.artists || [];
                         this.album = mm.common.album || '';
                         this.duration = mm.format.duration || -1;
                         this.cover = mm.common.picture || [];
-                        this.lyrics =
-                            ((_a = NodeID3.read(this.filePath, { include: ['USLT'] }).unsynchronisedLyrics) === null || _a === void 0 ? void 0 : _a.text) || '';
+                        this.lyrics = mm.common.lyrics || [];
                         this.id = crypto
                             .createHash('md5')
                             .update(this.title + mm.format.bitrate + this.duration + this.album)
